@@ -155,7 +155,7 @@ class Patient(object):
         returns: The total virus population at the end of the update (an
         integer)
         """
-        popDensity = self.getTotalPop()/self.getMaxPop()
+        popDensity = self.getTotalPop()/float(self.getMaxPop())
         virusescopy = self.viruses[:]
         for virus in virusescopy:
             try:
@@ -190,22 +190,20 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
         virus = [SimpleVirus(maxBirthProb, clearProb)]
         viruses = virus * numViruses
         patient = Patient(viruses, maxPop)
-        pop = [patient.getTotalPop()]
+        pop = []
         for i in range(300):
-            patient.update()
-            pop.append(patient.getTotalPop())
+            pop.append(patient.update())
         num -= 1
-        z = numpy.array([0]*301)
+        z = numpy.array([0]*300)
         z = z + numpy.array(pop)
     z = z / float(numTrials)
     pylab.figure(1)
-    pylab.plot(range(301),pop)
+    pylab.plot(range(300),list(z))
+    pylab.title("SimpleVirus simulation")
+    pylab.xlabel("Time Steps")
+    pylab.ylabel("Average Virus Population")
+    pylab.legend()
     pylab.show()
-    # instantiates a Patient
-    # simulates changes to the virus population for 300 time steps
-    # the x-axis should correspond to the number of elapsed time steps
-    # the y-axis should correspond to the average size of the virus population in the patient
-    
 
 
 
