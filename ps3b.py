@@ -184,8 +184,28 @@ def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
     clearProb: Maximum clearance probability (a float between 0-1)
     numTrials: number of simulation runs to execute (an integer)
     """
-
-    # TODO
+    # Run the simulation for numTrials trials
+    num = numTrials
+    while num != 0:
+        virus = [SimpleVirus(maxBirthProb, clearProb)]
+        viruses = virus * numViruses
+        patient = Patient(viruses, maxPop)
+        pop = [patient.getTotalPop()]
+        for i in range(300):
+            patient.update()
+            pop.append(patient.getTotalPop())
+        num -= 1
+        z = numpy.array([0]*301)
+        z = z + numpy.array(pop)
+    z = z / float(numTrials)
+    pylab.figure(1)
+    pylab.plot(range(301),pop)
+    pylab.show()
+    # instantiates a Patient
+    # simulates changes to the virus population for 300 time steps
+    # the x-axis should correspond to the number of elapsed time steps
+    # the y-axis should correspond to the average size of the virus population in the patient
+    
 
 
 
