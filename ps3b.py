@@ -232,16 +232,17 @@ class ResistantVirus(SimpleVirus):
         mutProb: Mutation probability for this virus particle (a float). This is
         the probability of the offspring acquiring or losing resistance to a drug.
         """
-
         self.resistances = resistances
         self.mutProb = mutProb
+        SimpleVirus.__init__(self, maxBirthProb, clearProb)
+        
 
 
     def getResistances(self):
         """
         Returns the resistances for this virus.
         """
-        return self.resisitances
+        return self.resistances
 
     def getMutProb(self):
         """
@@ -260,7 +261,7 @@ class ResistantVirus(SimpleVirus):
         returns: True if this virus instance is resistant to the drug, False
         otherwise.
         """
-        return self.resisitances[drug]
+        return self.resistances.get(drug)
         
 
 
