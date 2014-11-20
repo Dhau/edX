@@ -233,20 +233,21 @@ class ResistantVirus(SimpleVirus):
         the probability of the offspring acquiring or losing resistance to a drug.
         """
 
-        # TODO
+        self.resistances = resistances
+        self.mutProb = mutProb
 
 
     def getResistances(self):
         """
         Returns the resistances for this virus.
         """
-        # TODO
+        return self.resisitances
 
     def getMutProb(self):
         """
         Returns the mutation probability for this virus.
         """
-        # TODO
+        return self.mutProb
 
     def isResistantTo(self, drug):
         """
@@ -259,8 +260,8 @@ class ResistantVirus(SimpleVirus):
         returns: True if this virus instance is resistant to the drug, False
         otherwise.
         """
+        return self.resisitances[drug]
         
-        # TODO
 
 
     def reproduce(self, popDensity, activeDrugs):
@@ -309,7 +310,23 @@ class ResistantVirus(SimpleVirus):
         """
 
         # TODO
-
+        test = activeDrugs[:]
+        for i in activeDrugs:
+            if self.isResistantTo(i):
+                test.remove(i)
+        if len(test) == 0:
+            if self.maxBirthProb == 0.0:
+                raise NoChildException()
+            elif random.random() < self.maxBirthProb * (1 - popDensity):
+                for drug in self.resistances.keys():
+                    if random.random() <= self.mutProb:
+                        self.resistances[drug] = not self.resistances[drug]
+                return ResistantVirus(self.getMaxBirthProb(),self.getClearProb()
+                ,self.resistances, self.mutProb)
+            else:
+                raise NoChildException()
+        else:
+            raise NoChildException()
             
 
 class TreatedPatient(Patient):
