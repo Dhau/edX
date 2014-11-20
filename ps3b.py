@@ -430,8 +430,8 @@ class TreatedPatient(Patient):
                     self.viruses.append(virus.reproduce(popDensity, self.activeDrugs))
             except NoChildException:
                 pass
-        return self.getResistPop(self.activeDrugs)
-
+        return len(self.viruses)
+        
 
 
 #
@@ -459,25 +459,32 @@ def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
     numTrials: number of simulation runs to execute (an integer)
     
     """
+    drug = "guttagonol"
+    virusList = [ResistantVirus(maxBirthProb, clearProb, resistances, mutProb) for i in range(numViruses)]
     num = numTrials
+    viruspop = numpy.array([0]*300)
+    resispop = numpy.array([0]*300)
     while num != 0:
-        virus = [ResistantVirus(maxBirthProb, clearProb, resistances, mutProb)]
-        viruses = virus * numViruses
+        viruses = virusList[:]
         patient = TreatedPatient(viruses, maxPop)
-        pop = []
-        for i in range(150):
-            pop.append(patient.update())
-        patient.addPrescription("guttagonol")
-        for i in range(150):
-            pop.append(patient.update())
+        pop1 = []
+        pop2 = []
+        for i in range(300):
+            if i > 149:
+                patient.addPrescription(drug)
+            pop1.append(patient.update())
+            pop2.append(patient.getResistPop(['guttagonol']))
+        print pop2
+        viruspop = viruspop + numpy.array(pop1)
+        resispop = resispop + numpy.array(pop2)
         num -= 1
-        z = numpy.array([0]*300)
-        z = z + numpy.array(pop)
-    z = z / float(numTrials)
-    print z
+    viruspop = viruspop / float(numTrials)
+    resispop = resispop / float(numTrials)
     pylab.figure(1)
-    pylab.plot(range(150),list(z))
-    pylab.plot(range(150,))
+    v = [round(i, 1) for i in list(viruspop)]
+    r = [round(i, 1) for i in list(resispop)]
+    pylab.plot(range(300),v)
+    pylab.plot(range(300),r)
     pylab.title("ResistantVirus simulation")
     pylab.xlabel("Time Steps")
     pylab.ylabel("# viruses")
