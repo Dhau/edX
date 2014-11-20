@@ -390,14 +390,11 @@ class TreatedPatient(Patient):
         drugs in the drugResist list.
         """
         count = 0
-        Flag = True
         for virus in self.viruses:
             for i in drugResist:
-                if virus.isResistantTo(i):
-                    pass
-                else:
-                    Flag = False
-            if Flag:
+                if not virus.isResistantTo(i):
+                    break
+            else:
                 count += 1
         return count
 
