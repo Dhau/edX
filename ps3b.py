@@ -348,7 +348,8 @@ class TreatedPatient(Patient):
         maxPop: The  maximum virus population for this patient (an integer)
         """
 
-        # TODO
+        Patient.__init__(self, viruses, maxPop)
+        self.activeDrugs = []
 
 
     def addPrescription(self, newDrug):
@@ -361,8 +362,9 @@ class TreatedPatient(Patient):
 
         postcondition: The list of drugs being administered to a patient is updated
         """
-
-        # TODO
+        if newDrug not in self.activeDrugs:
+            self.activeDrugs.append(newDrug)
+        return self.activeDrugs
 
 
     def getPrescriptions(self):
@@ -373,7 +375,7 @@ class TreatedPatient(Patient):
         patient.
         """
 
-        # TODO
+        return self.activeDrugs
 
 
     def getResistPop(self, drugResist):
@@ -387,8 +389,17 @@ class TreatedPatient(Patient):
         returns: The population of viruses (an integer) with resistances to all
         drugs in the drugResist list.
         """
-
-        # TODO
+        count = 0
+        Flag = True
+        for virus in self.viruses:
+            for i in drugResist:
+                if virus.isResistantTo(i):
+                    pass
+                else:
+                    Flag = False
+            if Flag:
+                count += 1
+        return count
 
 
     def update(self):
@@ -412,7 +423,17 @@ class TreatedPatient(Patient):
         integer)
         """
 
-        # TODO
+        popDensity = self.getTotalPop()/float(self.getMaxPop())
+        virusescopy = self.viruses[:]
+        for virus in virusescopy:
+            try:
+                if virus.doesClear():
+                    self.viruses.remove(virus)
+                else:
+                    self.viruses.append(virus.reproduce(popDensity, self.activeDrugs))
+            except NoChildException:
+                pass
+        return self.getResistPop(self.activeDrugs)
 
 
 
