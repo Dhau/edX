@@ -459,5 +459,29 @@ def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
     numTrials: number of simulation runs to execute (an integer)
     
     """
+    num = numTrials
+    while num != 0:
+        virus = [ResistantVirus(maxBirthProb, clearProb, resistances, mutProb)]
+        viruses = virus * numViruses
+        patient = TreatedPatient(viruses, maxPop)
+        pop = []
+        for i in range(150):
+            pop.append(patient.update())
+        patient.addPrescription("guttagonol")
+        for i in range(150):
+            pop.append(patient.update())
+        num -= 1
+        z = numpy.array([0]*300)
+        z = z + numpy.array(pop)
+    z = z / float(numTrials)
+    print z
+    pylab.figure(1)
+    pylab.plot(range(150),list(z))
+    pylab.plot(range(150,))
+    pylab.title("ResistantVirus simulation")
+    pylab.xlabel("Time Steps")
+    pylab.ylabel("# viruses")
+    pylab.legend()
+    pylab.show()
 
-    # TODO
+
