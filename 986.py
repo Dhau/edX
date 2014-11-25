@@ -2,6 +2,9 @@ from random import randint
 
 class Grammar:
     def __init__(self, start=None):
+        """
+        one for the start string, and one for the collection of rules.
+        """
         self.rules = {}
         self.startcode = start
 
@@ -27,18 +30,18 @@ class Grammar:
     def generate(self):
         self.startcode = self.startcode.split(' ')
         def helper(startcode):
-            for i in range(len(self.startcode)-1):
-                if startcode[i] in self.rules:
+            for i in range(len(self.startcode)):
+                if startcode[i] in self.rules.keys():
                     return True
         while helper(self.startcode) is True:
             self.applyTo(self.startcode)
             print(self.startcode)
-        self.startcode = ' '.join(self.startcode)
+        ###self.startcode = ' '.join(self.startcode)
         return self.startcode
 
     def applyTo(self,deriv=None):
-        for i in range (len(deriv)):
-            if deriv[i] in self.rules:
+        for i in range(len(deriv)):
+            if deriv[i] in self.rules.keys():
                 deriv[i] = self.__getitem__(deriv[i])
         return deriv
 
