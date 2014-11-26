@@ -35,8 +35,15 @@ class Grammar:
                     return True
         while helper(self.startcode) is True:
             self.applyTo(self.startcode)
-            print(self.startcode)
-        ###self.startcode = ' '.join(self.startcode)
+            for i in range(len(self.startcode)):
+                if type(self.startcode[i]) == list:
+                    """change unsolved list to string"""
+                    self.startcode[i] = ' '.join(self.startcode[i])
+            """make all the unsolved words go together"""
+            self.startcode = ' '.join(self.startcode)
+            """prepare to next loop"""
+            self.startcode = self.startcode.split()
+        self.startcode = ' '.join(self.startcode)
         return self.startcode
 
     def applyTo(self,deriv=None):
